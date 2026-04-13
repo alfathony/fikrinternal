@@ -3,11 +3,11 @@
     <!-- Hero / Title Section -->
     <div class="mb-16 max-w-3xl">
       <h1 class="text-4xl md:text-6xl font-light tracking-wide text-zinc-100 mb-6">
-        Capturing Moments <br>
-        <span class="text-primary italic font-serif">Brilliantly.</span>
+        Capturing the Energy <br>
+        <span class="text-primary italic font-serif">of the Stage.</span>
       </h1>
       <p class="text-zinc-400 text-sm md:text-base leading-relaxed tracking-wide">
-        Explore a curated collection of high-quality professional photography. Every image is optimized for rapid loading without compromising on quality using the power of Nuxt Image.
+        Professional music photography specializing in high-energy live performances. Explore a curated collection of stage moments where raw emotion and vibrant atmosphere are perfectly preserved through the lens.
       </p>
     </div>
 
@@ -29,7 +29,12 @@
 
     <!-- Gallery Grid -->
     <div v-else class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-      <div v-for="photo in photos" :key="photo.id" class="break-inside-avoid relative group overflow-hidden rounded-lg bg-zinc-900 border border-zinc-900/50">
+      <div 
+        v-for="(photo, index) in photos" 
+        :key="photo.id" 
+        @click="openLightbox(index)"
+        class="break-inside-avoid relative group overflow-hidden rounded-lg bg-zinc-900 border border-zinc-900/50 cursor-zoom-in"
+      >
         <!-- NuxtImg handles lazy loading and format optimization natively -->
         <NuxtImg
           :src="photo.src"
@@ -47,6 +52,76 @@
         </div>
       </div>
     </div>
+
+    <!-- Lightbox Modal -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
+        leave-active-class="transition duration-200 ease-in"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
+      >
+        <div v-if="isLightboxOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-zinc-950/95 backdrop-blur-xl" @click="closeLightbox"></div>
+          
+          <!-- Close Button -->
+          <button 
+            @click="closeLightbox"
+            class="absolute top-8 right-8 text-zinc-400 hover:text-white transition-colors p-2 z-10"
+            aria-label="Close lightbox"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <!-- Navigation -->
+          <button 
+            @click="prevPhoto"
+            class="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors p-4 hidden md:block z-10"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <button 
+            @click="nextPhoto"
+            class="absolute right-8 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors p-4 hidden md:block z-10"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <!-- Content Container -->
+          <div class="relative w-full h-full flex flex-col items-center justify-center pointer-events-none">
+            <div class="relative max-w-full max-h-[85vh] group pointer-events-auto">
+              <NuxtImg
+                :src="photos[selectedIndex].src"
+                :alt="photos[selectedIndex].title"
+                format="webp"
+                quality="90"
+                class="max-w-full max-h-[85vh] object-contain shadow-2xl rounded-sm"
+              />
+              
+              <!-- Info Overlay -->
+              <div class="absolute -bottom-16 left-0 right-0 text-center animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <h2 class="text-zinc-100 text-sm md:text-base font-light tracking-[0.2em] uppercase">
+                  {{ photos[selectedIndex].title }}
+                </h2>
+                <p class="text-zinc-500 text-[10px] tracking-[0.3em] mt-2">
+                  {{ selectedIndex + 1 }} / {{ photos.length }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -66,5 +141,46 @@ const { data: photos, error, pending } = await useAsyncData('gallery', async () 
     ...item,
     src: item.url
   }))
+})
+
+// Lightbox Logic
+const selectedIndex = ref(null)
+const isLightboxOpen = computed(() => selectedIndex.value !== null)
+
+const openLightbox = (index) => {
+  selectedIndex.value = index
+  document.body.style.overflow = 'hidden'
+}
+
+const closeLightbox = () => {
+  selectedIndex.value = null
+  document.body.style.overflow = ''
+}
+
+const nextPhoto = () => {
+  if (photos.value && photos.value.length > 0) {
+    selectedIndex.value = (selectedIndex.value + 1) % photos.value.length
+  }
+}
+
+const prevPhoto = () => {
+  if (photos.value && photos.value.length > 0) {
+    selectedIndex.value = (selectedIndex.value - 1 + photos.value.length) % photos.value.length
+  }
+}
+
+const handleKeydown = (e) => {
+  if (!isLightboxOpen.value) return
+  if (e.key === 'Escape') closeLightbox()
+  if (e.key === 'ArrowRight') nextPhoto()
+  if (e.key === 'ArrowLeft') prevPhoto()
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>

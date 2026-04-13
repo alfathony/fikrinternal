@@ -8,9 +8,9 @@
     </div>
     
     <nav class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-[0.2em] text-zinc-400">
-      <NuxtLink to="/" class="hover:text-primary transition-colors duration-300">PORTFOLIO</NuxtLink>
-      <NuxtLink to="#" class="hover:text-primary transition-colors duration-300">SERVICES</NuxtLink>
-      <NuxtLink to="#" class="hover:text-primary transition-colors duration-300">CONTACT</NuxtLink>
+      <NuxtLink to="/" class="hover:text-primary transition-colors duration-300">HOME</NuxtLink>
+      <NuxtLink to="/about" class="hover:text-primary transition-colors duration-300">ABOUT US</NuxtLink>
+      <NuxtLink to="https://www.instagram.com/fikrinternal/" target="_blank" class="hover:text-primary transition-colors duration-300">INSTAGRAM</NuxtLink>
     </nav>
   </header>
 </template>
