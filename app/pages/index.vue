@@ -1,14 +1,12 @@
 <template>
   <div class="px-6 md:px-12 py-12">
     <!-- Hero / Title Section -->
-    <div class="mb-16 max-w-3xl">
-      <h1 class="text-4xl md:text-6xl font-light tracking-wide text-zinc-100 mb-6">
-        Capturing the Energy <br>
-        <span class="text-primary italic font-serif">of the Stage.</span>
+    <div class="mb-0 max-w-3xl">
+      <h1 class="text-4xl md:text-6xl font-light tracking-wide text-zinc-100 mb-6 hidden">
+        FIKRINTERNAL <br>
+        
       </h1>
-      <p class="text-zinc-400 text-sm md:text-base leading-relaxed tracking-wide">
-        Professional music photography specializing in high-energy live performances. Explore a curated collection of stage moments where raw emotion and vibrant atmosphere are perfectly preserved through the lens.
-      </p>
+      
     </div>
 
     <!-- Loading State -->
@@ -99,12 +97,21 @@
 
           <!-- Content Container -->
           <div class="relative w-full h-full flex flex-col items-center justify-center pointer-events-none">
-            <div class="relative max-w-full max-h-[85vh] group pointer-events-auto">
+            <!-- Loading Spinner -->
+            <div v-if="isImageLoading" class="absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-10 h-10 border-[3px] border-zinc-800 border-t-primary rounded-full animate-spin"></div>
+            </div>
+
+            <div 
+              class="relative max-w-full max-h-[85vh] group pointer-events-auto transition-all duration-500"
+              :class="isImageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'"
+            >
               <NuxtImg
                 :src="photos[selectedIndex].src"
                 :alt="photos[selectedIndex].title"
                 format="webp"
                 quality="90"
+                @load="isImageLoading = false"
                 class="max-w-full max-h-[85vh] object-contain shadow-2xl rounded-sm"
               />
               
@@ -146,8 +153,10 @@ const { data: photos, error, pending } = await useAsyncData('gallery', async () 
 // Lightbox Logic
 const selectedIndex = ref(null)
 const isLightboxOpen = computed(() => selectedIndex.value !== null)
+const isImageLoading = ref(false)
 
 const openLightbox = (index) => {
+  isImageLoading.value = true
   selectedIndex.value = index
   document.body.style.overflow = 'hidden'
 }
@@ -155,16 +164,19 @@ const openLightbox = (index) => {
 const closeLightbox = () => {
   selectedIndex.value = null
   document.body.style.overflow = ''
+  isImageLoading.value = false
 }
 
 const nextPhoto = () => {
   if (photos.value && photos.value.length > 0) {
+    isImageLoading.value = true
     selectedIndex.value = (selectedIndex.value + 1) % photos.value.length
   }
 }
 
 const prevPhoto = () => {
   if (photos.value && photos.value.length > 0) {
+    isImageLoading.value = true
     selectedIndex.value = (selectedIndex.value - 1 + photos.value.length) % photos.value.length
   }
 }

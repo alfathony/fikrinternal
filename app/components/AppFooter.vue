@@ -4,7 +4,7 @@
       &copy; {{ new Date().getFullYear() }} FIKRINTERNAL. ALL RIGHTS RESERVED.
     </p>
     <p class="text-zinc-600 text-xs tracking-widest">
-      CREATED BY <span class="text-primary font-bold">ALFATHONY</span>.
+      CREATED BY <a href="https://alfathony.com" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline transition-all">ALFATHONY</a>.
     </p>
   </footer>
 </template>

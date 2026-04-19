@@ -4,7 +4,7 @@
       <!-- Content -->
       <div class="order-2 lg:order-1">
         <h1 class="text-4xl md:text-6xl font-light tracking-wide text-zinc-100 mb-8 uppercase">
-          ABOUT <span class="text-primary italic font-serif lowercase">fikrinternal</span>
+          <span class="text-primary italic font-serif lowercase">fikrinternal</span>
         </h1>
         
         <div class="space-y-6 text-zinc-400 text-sm md:text-base leading-relaxed tracking-wide font-light">
