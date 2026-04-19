@@ -41,9 +41,10 @@
 
 <script setup>
 useHead({
-  title: 'About | FIKRINTERNAL',
+  title: 'About FIKRINTERNAL',
   meta: [
-    { name: 'description', content: 'Learn more about FIKRINTERNAL and our passion for music stage photography.' }
+    { name: 'description', content: 'Learn about FIKRINTERNAL, the vision behind the lens capturing the pulse and raw energy of live music performances.' },
+    { name: 'keywords', content: 'music photography, stage photography, concert photographer, FIKRINTERNAL, live music photos, about fikrinternal' }
   ]
 })
 </script>

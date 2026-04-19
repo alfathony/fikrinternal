@@ -133,6 +133,14 @@
 </template>
 
 <script setup>
+useHead({
+  title: 'FIKRINTERNAL Stage Photography',
+  meta: [
+    { name: 'description', content: 'Photography specializing in high-energy live performances. Explore the raw atmosphere and defining moments of every concert captured through the lens of FIKRINTERNAL.' },
+    { name: 'keywords', content: 'music photography, stage photography, concert photographer, live music photos, FIKRINTERNAL, professional photographer, rock concert photos' }
+  ]
+})
+
 const supabase = useSupabaseClient()
 
 const { data: photos, error, pending } = await useAsyncData('gallery', async () => {
